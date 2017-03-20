@@ -28,7 +28,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if v, ok := m["size"]; ok {
 		params.size, _ = strconv.Atoi(v[0])
 	}
-	if v, ok := m["cylnframesces"]; ok {
+	if v, ok := m["nframes"]; ok {
 		params.nframes, _ = strconv.Atoi(v[0])
 	}
 	if v, ok := m["delay"]; ok {
