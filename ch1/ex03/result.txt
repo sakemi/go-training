@@ -1,8 +1,0 @@
-D:\Go\gpl\go-training\gpl\ch1\ex03>go test -bench=.
-testing: warning: no tests to run
-BenchmarkJoinSingleArg-4                1000000000               2.99 ns/op
-BenchmarkAddOperatorSingleArg-4         200000000               10.1 ns/op
-BenchmarkJoinMultiArgs-4                10000000               139 ns/op
-BenchmarkAddOperatorMultiArgs-4          3000000               443 ns/op
-PASS
-ok      _/D_/Go/gpl/go-training/gpl/ch1/ex03    9.645s
