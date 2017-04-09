@@ -5,15 +5,14 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 )
 
 func main() {
 	start := time.Now()
 	ch := make(chan string)
-	for i, url := range os.Args[1:] {
-		file := "result" + strconv.Itoa(i) + ".txt"
+	for _, url := range os.Args[2:] {
+		file := os.Args[1]
 		dst, err := os.Create(file)
 		if err != nil {
 			panic(err)
@@ -21,7 +20,7 @@ func main() {
 		defer dst.Close()
 		go fetch(url, ch, dst)
 	}
-	for range os.Args[1:] {
+	for range os.Args[2:] {
 		fmt.Println(<-ch)
 	}
 	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
