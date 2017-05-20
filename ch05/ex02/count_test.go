@@ -18,7 +18,7 @@ func TestCount(t *testing.T) {
 		panic(err)
 	}
 
-	expected := map[string]int{"html": 1, "head": 1, "script": 1, "meta": 3, "title": 1, "body": 1, "a": 2, "link": 1}
+	expected := map[string]int{"html": 1, "head": 1, "script": 1, "meta": 3, "title": 1, "body": 1, "a": 2}
 	m := map[string]int{}
 	count(m, doc)
 	if !equals(m, expected) {
