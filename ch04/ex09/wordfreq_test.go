@@ -7,10 +7,10 @@ import (
 
 func TestCountWords(t *testing.T) {
 	f, err := os.Open("test.txt")
-	defer f.Close()
 	if err != nil {
 		t.Error("failed to open file")
 	}
+	defer f.Close()
 	counts := make(map[string]int)
 	countWords(f, counts)
 
