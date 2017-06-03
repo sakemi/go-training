@@ -1,0 +1,4 @@
+http://localhost:8000/create?item=bag&price=120
+http://localhost:8000/update?item=socks&price=1.5
+http://localhost:8000/get?item=socks
+http://localhost:8000/delete?item=socks
