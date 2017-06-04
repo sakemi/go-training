@@ -1,0 +1,1 @@
+http://localhost:8000/?expr=(x-3)%2b2*5/pow(A,2)&x=15&A=2
