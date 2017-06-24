@@ -1,0 +1,7 @@
+foo
+bar
+buz
+FooBar
+hoge
+hogehoge
+hogera
