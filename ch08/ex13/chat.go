@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const timeout = 5 //min
+const timeout = 1 //min
 
 type client struct {
 	ch   chan<- string
@@ -53,10 +53,12 @@ func handleConn(conn net.Conn) {
 	cli := client{ch, who}
 	entering <- cli
 
-	go disconnecter(conn, ch)
+	write := make(chan struct{})
+	go disconnecter(conn, write)
 
 	input := bufio.NewScanner(conn)
 	for input.Scan() {
+		write <- struct{}{}
 		messages <- who + ": " + input.Text()
 	}
 
@@ -71,7 +73,7 @@ func clientWriter(conn net.Conn, ch <-chan string) {
 	}
 }
 
-func disconnecter(conn net.Conn, ch <-chan string) {
+func disconnecter(conn net.Conn, ch <-chan struct{}) {
 	cnt := 0
 	tick := time.Tick(1 * time.Minute)
 	for cnt < timeout {
