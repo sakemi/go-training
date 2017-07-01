@@ -1,0 +1,20 @@
+D:\Go\gpl\go-training\ch09\ex06>testall.bat
+testing: warning: no tests to run
+Benchmark1-4                   3         453408633 ns/op
+testing: Benchmark1-4 left GOMAXPROCS set to 1
+Benchmark2-4                   5         295284940 ns/op
+testing: Benchmark2-4 left GOMAXPROCS set to 2
+Benchmark4-4                   5         217121820 ns/op
+Benchmark8-4                  10         185741710 ns/op
+testing: Benchmark8-4 left GOMAXPROCS set to 8
+Benchmark16-4                 10         184326470 ns/op
+testing: Benchmark16-4 left GOMAXPROCS set to 16
+Benchmark32-4                 10         182030970 ns/op
+testing: Benchmark32-4 left GOMAXPROCS set to 32
+PASS
+ok      _/D_/Go/gpl/go-training/ch09/ex06       12.905s
+
+
+
+Intel Core i5-6500 CPU @ 3.20GHz 3.20GHz
+4coreだけどGOMAXPROCS=8のほうがはやい？
