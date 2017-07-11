@@ -16,7 +16,13 @@ func main() {
 }
 
 func IsPalindrome(s sort.Interface) bool {
-	return sort.IsSorted(sort.Reverse(s))
+	for i := 0; i < s.Len(); i++ {
+		j := s.Len() - i - 1
+		if s.Less(i, j) || s.Less(j, i) {
+			return false
+		}
+	}
+	return true
 }
 
 func (p PalindromeCandidate) Len() int {
@@ -24,7 +30,6 @@ func (p PalindromeCandidate) Len() int {
 }
 
 func (p PalindromeCandidate) Less(i, j int) bool {
-	//TODO
 	return p[i] < p[j]
 }
 
