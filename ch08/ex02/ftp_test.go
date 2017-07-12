@@ -60,4 +60,10 @@ func TestInterpret(t *testing.T) {
 	}
 	info := &Info{}
 	handleRequests(requests, info)
+
+	//非サポートコマンド
+	req := "HOGE foo bar"
+	if interpret(&ctrl, info, req) {
+		t.Error(req)
+	}
 }
