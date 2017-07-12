@@ -1,3 +1,4 @@
+//ex08ができなかったのでstable sortできてない。とりあえず普通のソートするサーバーだけ
 package main
 
 import (
