@@ -5,21 +5,27 @@ import (
 	"strings"
 )
 
-var format map[string]func(string) (*ReadCloser, error)
-
-func RegisterFormat(extention string, openReader func(string) (*ReadCloser, error)) {
-	if format == nil {
-		format = map[string]func(string) (*ReadCloser, error){}
-	}
-	format[extention] = openReader
+type Reader interface {
+	Next() error
+	Read(b []byte) (int, error)
+	Close()
 }
 
-func OpenReader(name string) (*ReadCloser, error) {
+var format map[string]func(string) (*Reader, error)
+
+func RegisterFormat(extention string, newReader func(string) (*Reader, error)) {
+	if format == nil {
+		format = map[string]func(string) (*Reader, error){}
+	}
+	format[extention] = newReader
+}
+
+func NewReader(name string) (*Reader, error) {
 	n := strings.Split(name, ".")
 	ext := n[len(n)-1]
-	openReader, ok := format[ext]
+	newReader, ok := format[ext]
 	if !ok {
 		return nil, fmt.Errorf("Unsupported file format: %s", ext)
 	}
-	return openReader(name)
+	return newReader(name)
 }
