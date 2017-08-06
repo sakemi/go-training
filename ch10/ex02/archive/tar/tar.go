@@ -9,7 +9,7 @@ import (
 
 type Reader struct {
 	reader *tar.Reader
-	file   *io.File
+	file   *os.File
 }
 
 func NewReader(name string) (*archive.Reader, error) {
