@@ -7,7 +7,7 @@ import (
 )
 
 type Reader struct {
-	reader *zip.Reader
+	reader *zip.ReadCloser
 }
 
 func NewReader(name string) (*archive.Reader, error) {
@@ -16,8 +16,11 @@ func NewReader(name string) (*archive.Reader, error) {
 		return nil, err
 	}
 
-	reader := Reader{r}
-	return reader, nil
+	zr := new(Reader)
+	zr.reader = r
+	var reader *archive.Reader
+	reader = zr
+	return &reader, nil
 }
 
 func init() {
@@ -35,5 +38,5 @@ func (r *Reader) Read(b []byte) (int, error) {
 }
 
 func (r *Reader) Close() {
-	r.Close()
+	r.reader.Close()
 }
