@@ -7,35 +7,27 @@ import (
 	"github.com/sakemi/go-training/ch10/ex02/archive"
 )
 
-type Reader struct {
-	reader *tar.Reader
-	file   *os.File
+type reader struct {
+	r *tar.Reader
 }
 
-func NewReader(name string) (*archive.Reader, error) {
-	file, err := os.Open(name)
-	if err != nil {
-		return nil, err
-	}
-
-	reader := Reader{tar.NewReader(file)}
-	return reader, nil
+func newReader(f *os.File) (archive.Reader, error) {
+	r := tar.NewReader(f)
+	return &reader{r}, nil
 }
 
 func init() {
-	archive.RegisterFormat("tar", NewReader)
+	archive.RegisterFormat("tar", newReader)
 }
 
-func (r *Reader) Next() error {
-	//TODO
+func (r *reader) Next() error {
+	_, err := r.r.Next()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (r *Reader) Read(b []byte) (int, error) {
-	//TODO
-	return 0, nil
-}
-
-func (r *Reader) Close() {
-	r.file.Close()
+func (r *reader) Read(b []byte) (int, error) {
+	return r.r.Read(b)
 }

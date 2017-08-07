@@ -2,41 +2,48 @@ package zip
 
 import (
 	"archive/zip"
+	"io"
+	"os"
 
 	"github.com/sakemi/go-training/ch10/ex02/archive"
 )
 
-type Reader struct {
-	reader *zip.ReadCloser
+type reader struct {
+	r *zip.Reader
+	i int
 }
 
-func NewReader(name string) (*archive.Reader, error) {
-	r, err := zip.OpenReader(name)
+func newReader(f *os.File) (archive.Reader, error) {
+	info, err := f.Stat()
 	if err != nil {
 		return nil, err
 	}
 
-	zr := new(Reader)
-	zr.reader = r
-	var reader *archive.Reader
-	reader = zr
-	return &reader, nil
+	r, err := zip.NewReader(f, info.Size())
+	if err != nil {
+		return err
+	}
+	return &reader{r}, nil
 }
 
 func init() {
-	archive.RegisterFormat("zip", NewReader)
+	archive.RegisterFormat("zip", newReader)
 }
 
-func (r *Reader) Next() error {
-	//TODO
+func (r *reader) Next() error {
+	r.i++
+	if len(r.r.File) <= i {
+		return io.EOF
+	}
 	return nil
 }
 
-func (r *Reader) Read(b []byte) (int, error) {
-	//TODO
-	return 0, nil
-}
-
-func (r *Reader) Close() {
-	r.reader.Close()
+func (r *reader) Read(b []byte) (int, error) {
+	f := r.r.File[r.i]
+	rc, err := f.Open()
+	if err != nil {
+		return 0, err
+	}
+	defer rc.Close()
+	return rc.Read(b)
 }
