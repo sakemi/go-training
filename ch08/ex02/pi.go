@@ -89,7 +89,7 @@ func pas(ctrl *Ctrl, _ *Info, arg ...string) {
 }
 
 func cwd(ctrl *Ctrl, info *Info, arg ...string) {
-	d := "." + arg[0]
+	d := arg[0]
 
 	i, err := os.Stat(d)
 	if err != nil || !i.IsDir() {
@@ -163,4 +163,8 @@ func sto(ctrl *Ctrl, info *Info, arg ...string) {
 
 func noo(ctrl *Ctrl, _ *Info, arg ...string) {
 	ctrl.reply(okay)
+}
+
+func lis(ctrl *Ctrl, _ *Info, arg ...string) {
+
 }
