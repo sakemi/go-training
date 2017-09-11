@@ -98,9 +98,11 @@ func encode(buf *bytes.Buffer, v reflect.Value) error {
 		if v.IsNil() {
 			fmt.Fprint(buf, "nil")
 		} else {
+			fmt.Fprintf(buf, "(%q ", v.Elem().Type().String())
 			if err := encode(buf, v.Elem()); err != nil {
 				return err
 			}
+			buf.WriteByte(')')
 		}
 	default:
 		return fmt.Errorf("unsupported type: %s", v.Type())
