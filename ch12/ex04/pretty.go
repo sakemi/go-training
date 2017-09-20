@@ -45,7 +45,7 @@ func MarshalIndent(v interface{}) ([]byte, error) {
 	return p.Bytes(), nil
 }
 
-const margin = 80
+const margin = 1000
 
 type token struct {
 	kind rune
@@ -61,6 +61,9 @@ type printer struct {
 	bytes.Buffer
 	indents []int
 	width   int
+
+	keyLength int
+	ind       int
 }
 
 func (p *printer) string(str string) {
@@ -78,6 +81,7 @@ func (p *printer) pop() (top *token) {
 	return
 }
 func (p *printer) begin() {
+	p.ind++
 	if len(p.stack) == 0 {
 		p.rtotal = 1
 	}
@@ -86,8 +90,13 @@ func (p *printer) begin() {
 	p.stack = append(p.stack, t)
 	p.string("(")
 }
-func (p *printer) end() {
-	p.string(")")
+func (p *printer) end(needReturn bool) {
+	p.ind--
+	if needReturn {
+		p.string(")\n")
+	} else {
+		p.string(")")
+	}
 	p.tokens = append(p.tokens, &token{kind: ')'})
 	x := p.pop()
 	x.size += p.rtotal
@@ -156,13 +165,16 @@ func pretty(p *printer, v reflect.Value) error {
 		p.begin()
 		for i := 0; i < v.Len(); i++ {
 			if i > 0 {
-				p.space()
+				p.string("\n")
+				for i := 0; i < p.keyLength; i++ {
+					p.space()
+				}
 			}
 			if err := pretty(p, v.Index(i)); err != nil {
 				return err
 			}
 		}
-		p.end()
+		p.end(false)
 
 	case reflect.Struct:
 		p.begin()
@@ -172,19 +184,26 @@ func pretty(p *printer, v reflect.Value) error {
 			}
 			p.begin()
 			p.string(v.Type().Field(i).Name)
+			p.keyLength = len(v.Type().Field(i).Name) + 2 + p.ind //"(key "
 			p.space()
 			if err := pretty(p, v.Field(i)); err != nil {
 				return err
 			}
-			p.end()
+			if i != v.NumField()-1 {
+				p.end(true)
+			} else {
+				p.end(false)
+			}
 		}
-		p.end()
+		p.end(false)
 
 	case reflect.Map:
 		p.begin()
 		for i, key := range v.MapKeys() {
 			if i > 0 {
-				p.space()
+				for i := 0; i < p.keyLength; i++ {
+					p.space()
+				}
 			}
 			p.begin()
 			if err := pretty(p, key); err != nil {
@@ -194,9 +213,13 @@ func pretty(p *printer, v reflect.Value) error {
 			if err := pretty(p, v.MapIndex(key)); err != nil {
 				return err
 			}
-			p.end()
+			if i != len(v.MapKeys())-1 {
+				p.end(true)
+			} else {
+				p.end(false)
+			}
 		}
-		p.end()
+		p.end(false)
 
 	case reflect.Ptr:
 		return pretty(p, v.Elem())
